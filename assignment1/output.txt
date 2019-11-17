@@ -1,0 +1,60 @@
+Running global:
+
+Score matrix:
+          A    T    A    C    G    T
+     0   -2   -4   -6   -8  -10  -12
+A   -2    2    0   -2   -4   -6   -8
+T   -4    0    4    2    0   -2   -4
+C   -6   -2    2    3    4    2    0
+G   -8   -4    0    1    2    6    4
+A  -10   -6   -2    2    0    4    5
+T  -12   -8   -4    0    1    2    6
+
+AT-CGAT
+|| || |
+ATACG-T
+
+Percentage: 83.333333%
+Calculated as (common markers)/(number of characters in the longest genome) * 100
+
+Hamming Distance: 2
+
+
+
+Running local:
+
+Score matrix:
+          P    A    W    H    E    A    E
+     0   -2   -4   -6   -8  -10  -12  -14
+H   -2    0    0    0    0    0    0    0
+D   -4    0    0    0    0    0    0    0
+A   -6    0    2    0    0    0    2    0
+G   -8    0    0    1    0    0    0    1
+A  -10    0    2    0    0    0    2    0
+W  -12    0    0    4    2    0    0    1
+G  -14    0    0    2    3    1    0    0
+H  -16    0    0    0    4    2    0    0
+E  -18    0    0    0    2    6    4    2
+Q  -20    0    0    0    0    4    5    3
+
+AWGHE
+|| ||
+AW-HE
+
+
+
+Running levenshtein:
+
+Score matrix:
+          A    T    A    C    G    T
+     0   -2   -4   -6   -8  -10  -12
+A   -2    2    0   -2   -4   -6   -8
+T   -4    0    4    2    0   -2   -4
+C   -6   -2    2    3    4    2    0
+G   -8   -4    0    1    2    6    4
+A  -10   -6   -2    2    0    4    5
+T  -12   -8   -4    0    1    2    6
+
+AT-CGAT
+ATACG-T
+Levenshtein distance: 2
