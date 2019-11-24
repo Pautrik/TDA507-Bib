@@ -3,13 +3,10 @@
  * Purpose:	Read PDB atom records into an array of "atom" structures.
  */
 
-// Student: Patrik Emanuelsson
-
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 
 #define MAX_ATOMS       10000
@@ -39,13 +36,6 @@ typedef struct {
 
 Atom	atom[MAX_ATOMS+1];
 
-double distance(Point a, Point b) {
-        double xPart, yPart, zPart;
-        xPart = pow(a.x - b.x, 2);
-        yPart = pow(a.y - b.y, 2);
-        zPart = pow(a.z - b.z, 2);
-        return sqrt(xPart + yPart + zPart);
-}
 
 int read_data(filename)
 	char	*filename;
@@ -112,24 +102,20 @@ int read_data(filename)
 			 * Copy values to the next element in the atom array.
 			 */
 
-			if ( i > MAX_ATOMS ) {
+			if ( ++i > MAX_ATOMS ) {
 				(void) fprintf(stderr, "Too many atoms read\n");
 				exit(0);
 			}
-
-                        if(strstr(s_name, "CA")) {
-                                i++;
-                                atom[i].serial = serial;
-                                strcpy(atom[i].atomName, s_name);
-                                strcpy(atom[i].altLoc, s_altLoc);
-                                strcpy(atom[i].resName, s_resName);
-                                strcpy(atom[i].chainID, s_chainID);
-                                atom[i].resSeq = resSeq;
-                                strcpy(atom[i].iCode, s_iCode);
-                                atom[i].centre.x = x;
-                                atom[i].centre.y = y;
-                                atom[i].centre.z = z;
-                        }
+			atom[i].serial = serial;
+			strcpy(atom[i].atomName, s_name);
+			strcpy(atom[i].altLoc, s_altLoc);
+			strcpy(atom[i].resName, s_resName);
+			strcpy(atom[i].chainID, s_chainID);
+			atom[i].resSeq = resSeq;
+			strcpy(atom[i].iCode, s_iCode);
+			atom[i].centre.x = x;
+			atom[i].centre.y = y;
+			atom[i].centre.z = z;
 		}
 	}
 	return i;
@@ -166,7 +152,7 @@ int main(argc, argv)
 	char	**argv;
 {
 	int	numAtoms;
-	int	i, j;
+	int	i;
 
         if ( argc<2 ) {
                 (void) fprintf(stderr, "usage: atom_array file.pdb\n");
@@ -174,7 +160,7 @@ int main(argc, argv)
         }
 
 	numAtoms = read_data(argv[1]);
-	/* for (i=1; i<=numAtoms; ++i) {
+	for (i=1; i<=numAtoms; ++i) {
 		write_pdb_atom(
 			atom[i].serial,
 			atom[i].atomName,
@@ -184,16 +170,7 @@ int main(argc, argv)
 			atom[i].resSeq,
 			atom[i].iCode,
 			atom[i].centre);
-	} */
-
-        for(i = 0; i < numAtoms - 1; i++) {
-                for(j = i + 1; j < numAtoms; j++) {
-                        if(distance(atom[i].centre, atom[j].centre) < 8) {
-                                printf("%d %d\n", atom[i].resSeq+1, atom[j].resSeq);
-                                printf("%d %d\n", atom[j].resSeq, atom[i].resSeq+1);
-                        }
-                }
-        }
+	}
 
         return 0;
 }

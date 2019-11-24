@@ -17,6 +17,11 @@
 
 
 typedef struct {
+        int i, j;
+} Point2;
+
+
+typedef struct {
 	double	x, y, z;
 } Point;
 
@@ -38,6 +43,7 @@ typedef struct {
  */
 
 Atom	atom[MAX_ATOMS+1];
+
 
 double distance(Point a, Point b) {
         double xPart, yPart, zPart;
@@ -147,7 +153,7 @@ void write_pdb_atom(serial, s_name, s_altLoc, s_resName, s_chainID,
 	char	*s_iCode;
 	Point	centre;
 {
-	printf("ATOM  %5d %s%s%s %s%4d%s   %8.3f%8.3f%8.3f\n",
+	/* printf("ATOM  %5d %s%s%s %s%4d%s   %8.3f%8.3f%8.3f\n",
                                 serial,
                                 s_name,
                                 s_altLoc,
@@ -157,16 +163,25 @@ void write_pdb_atom(serial, s_name, s_altLoc, s_resName, s_chainID,
                                 s_iCode,
                                 centre.x,
                                 centre.y,
-                                centre.z);
+                                centre.z); */
 }
 
+Point2 pairs[4 * (MAX_ATOMS + 1)];
 
 int main(argc, argv)
 	int	argc;
 	char	**argv;
 {
-	int	numAtoms;
+	int	numAtoms, numResSeq = 0;
 	int	i, j;
+        int     *uniqueSeqNr;
+        int     pairsIndex = 0;
+        int     intA, intB, extAB;
+        int     maxScoreSeqNr;
+        int     foundDuplicate;
+        double  maxScore = 0, score;
+
+
 
         if ( argc<2 ) {
                 (void) fprintf(stderr, "usage: atom_array file.pdb\n");
@@ -174,26 +189,63 @@ int main(argc, argv)
         }
 
 	numAtoms = read_data(argv[1]);
-	/* for (i=1; i<=numAtoms; ++i) {
-		write_pdb_atom(
-			atom[i].serial,
-			atom[i].atomName,
-			atom[i].altLoc,
-			atom[i].resName,
-			atom[i].chainID,
-			atom[i].resSeq,
-			atom[i].iCode,
-			atom[i].centre);
-	} */
+        
+        uniqueSeqNr = (int*) malloc(numAtoms * sizeof(int));
 
+        // Find all unique sequence numbers
+        for(i = 0; i < numAtoms; i++) {
+                foundDuplicate = 0;
+                for(j = 0; j < numResSeq; j++) {
+                        if(uniqueSeqNr[j] == atom[i].resSeq) {
+                                foundDuplicate = 1;
+                                break;
+                        }
+                }
+                if(!foundDuplicate) {
+                        uniqueSeqNr[numResSeq++] = atom[i].resSeq;
+                }
+        }
+
+        // populate pairs
         for(i = 0; i < numAtoms - 1; i++) {
                 for(j = i + 1; j < numAtoms; j++) {
                         if(distance(atom[i].centre, atom[j].centre) < 8) {
-                                printf("%d %d\n", atom[i].resSeq+1, atom[j].resSeq);
-                                printf("%d %d\n", atom[j].resSeq, atom[i].resSeq+1);
+                                pairs[pairsIndex].i = atom[i].resSeq;
+                                pairs[pairsIndex].j = atom[j].resSeq;
+                                pairsIndex++;
+
+                                pairs[pairsIndex].i = atom[j].resSeq;
+                                pairs[pairsIndex].j = atom[i].resSeq;
+                                pairsIndex++;
                         }
                 }
         }
+        
+
+        // calculate and identify max domak value
+        for(i = 0; i < numResSeq; i++) {
+                intA = 0;
+                intB = 0;
+                extAB = 0;
+                for(j = 0; j < numAtoms; j++) {
+                        if(pairs[j].i < uniqueSeqNr[i]) {
+                                if(pairs[j].j < uniqueSeqNr[i]) intA++;
+                                else extAB++;
+                        }
+                        else {
+                                if(pairs[j].j > uniqueSeqNr[i]) intB++;
+                                else extAB++;
+                        }
+                }
+                score = intA * intB / (double) extAB;
+                
+                if(score > maxScore) {
+                        maxScore = score;
+                        maxScoreSeqNr = uniqueSeqNr[i];
+                }
+        }
+
+        printf("Clearest split at sequence number %d\n", maxScoreSeqNr);
 
         return 0;
 }

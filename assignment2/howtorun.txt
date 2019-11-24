@@ -1,0 +1,10 @@
+for make_distance_map:
+    * Build: make make_distance_map
+    * Run and out to file: ./make_distance_map 2CSN.pdb > 2CSN.pairs
+    * Plot: wish dotplot.tcl 2CSN.pairs
+    * All together: make make_distance_map && ./make_distance_map 2CSN.pdb > 2CSN.pairs && wish dotplot.tcl 2CSN.pairs
+
+for domak:
+    * Build: make domak
+    * Run: ./domak 2CSN.pdb
+    * All together: make domak && ./domak 2CSN.pdb

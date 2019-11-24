@@ -45,9 +45,9 @@
 #	-o	put the output (the executable file) in named file
 #
 
-CFLAGS= -Wall -g
+CFLAGS= -Wall -g -lm
 
-all:	pdb_io make_distance_map residue_array
+all:	pdb_io make_distance_map residue_array domak
 
 pdb_io:	pdb_io.c
 	gcc $(CFLAGS) -o pdb_io pdb_io.c
@@ -58,7 +58,11 @@ make_distance_map:	make_distance_map.c
 residue_array:	residue_array.c
 	gcc $(CFLAGS) -o residue_array residue_array.c
 
+domak:	domak.c
+	gcc $(CFLAGS) -o domak domak.c
+
 clean:
 	rm -f pdb_io
 	rm -f make_distance_map
 	rm -f residue_array
+	rm -f domak
