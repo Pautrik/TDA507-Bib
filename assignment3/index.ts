@@ -1,3 +1,5 @@
+// Patrik Emanuelsson
+
 import { readFileSync } from 'fs';
 
 interface Atom {

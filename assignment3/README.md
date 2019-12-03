@@ -1,3 +1,4 @@
+Author: Patrik Emanuelsson
 # Assignment 3
 Only part 1 was solved
 ## Requires
