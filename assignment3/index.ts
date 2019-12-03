@@ -26,8 +26,8 @@ function parseContent(str: string) : Atom[] {
     });
 }
 
-function findChain(atom: Atom, atoms: Atom[], chain = ''): string {
-    let bestChain = '';
+function findChain(atom: Atom, atoms: Atom[], chain: Atom[] = []): Atom[] {
+    let bestChain = [];
 
     for(let i = 0; i < atoms.length; i++) {
 
@@ -45,7 +45,7 @@ function findChain(atom: Atom, atoms: Atom[], chain = ''): string {
         }
     }
 
-    return `${atom.id},${bestChain}`;
+    return [atom, ...bestChain];
 }
 
 function distance(a: Coords, b: Coords): number {
@@ -59,7 +59,7 @@ function main() {
         process.exit();
     }
 
-    let bestChain = '';
+    let bestChain: Atom[] = [];
     
     const fileContent= readFileSync(process.argv[2], 'utf-8');
     const atoms = parseContent(fileContent.trim());
@@ -67,14 +67,15 @@ function main() {
     for(let i = 0; i < atoms.length; i++) {
         const atomsCopy = [...atoms];
         const atom = atomsCopy.splice(i, 1)[0];
-        const testChain = findChain(atom, atomsCopy, atom.id.toString());
+        const testChain = findChain(atom, atomsCopy, [atom]);
 
         if(bestChain.length < testChain.length) {
             bestChain = testChain;  
         }
     }
 
-    console.log(`Best chain: ${bestChain}`);
+    console.log(`Best chain:\n${bestChain.map(x => x.id).join('\n')}`);
+    console.log(`Number of atoms in chain: ${bestChain.length}`);
 }
 
 main();
