@@ -1,0 +1,26 @@
+By: Patrik Emanuelsson
+
+npm run build
+
+> assignment3@1.0.0 build /home/pem/Documents/TDA507-Bib/assignment3
+> tsc index.ts
+
+
+
+npm start data_q1.txt
+
+> assignment3@1.0.0 start /home/pem/Documents/TDA507-Bib/assignment3
+> node index.js "data_q1.txt"
+
+Best chain:
+2
+1
+10
+5
+7
+6
+4
+3
+9
+8
+Number of atoms in chain: 10
