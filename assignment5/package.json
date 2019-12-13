@@ -1,0 +1,16 @@
+{
+  "name": "assignment5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Patrik Emanuelsson",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "mz": "^2.7.0"
+  }
+}
